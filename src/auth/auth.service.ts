@@ -24,7 +24,7 @@ export class AuthService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   async create(createAuthDto: CreateUserDto): Promise<AuthResponse> {
     try {
@@ -77,6 +77,26 @@ export class AuthService {
       token: this.getJwtToken({ email, uid: user.id }),
     };
   }
+
+  async checkAuthStatus(id: string): Promise<AuthResponse> {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    return {
+      success: true,
+      data: exclude(user, ['password']) as UserWithoutPassword,
+      token: this.getJwtToken({ email: user.email, uid: user.id }),
+    };
+  }
+
+
 
   private getJwtToken(payload: JwtPayload): string {
     const token = this.jwtService.sign(payload);

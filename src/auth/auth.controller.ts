@@ -10,7 +10,7 @@ import { UserValidRole } from './interfaces';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('signup')
   create(@Body() createAuthDto: CreateUserDto) {
@@ -20,6 +20,14 @@ export class AuthController {
   @Post('login')
   login(@Body() loginUserDto: LoginUserDto) {
     return this.authService.login(loginUserDto);
+  }
+
+  @Get('check-auth-status')
+  @Auth()
+  checkAuthStatus(
+    @GetUser('id') userId: string,
+  ) {
+    return this.authService.checkAuthStatus(userId);
   }
 
   @Get('private')
