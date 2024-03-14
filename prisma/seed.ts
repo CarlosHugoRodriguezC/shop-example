@@ -1,21 +1,15 @@
 import { PrismaClient } from '@prisma/client';
-import { hashSync } from 'bcryptjs';
+import { productsFactory, usersFactory } from './factories';
 
 const prisma = new PrismaClient();
 
 const main = async () => {
-  const users = await prisma.user.upsert({
-    where: { email: 'test@mail.com' },
-    update: {},
-    create: {
-      email: 'test@mail.com',
-      firstName: 'Test',
-      lastName: 'User',
-      password: hashSync('pass_good', 10),
-    },
-  });
+  const users = await usersFactory(prisma);
+  const products = await productsFactory(prisma);
 
-  console.log({ users });
+  console.log(`${users.length} users created`);
+  console.log(`${products.length} products created`);
+  console.log('Seed completed');
 };
 
 main()

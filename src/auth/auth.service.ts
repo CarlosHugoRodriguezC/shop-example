@@ -9,13 +9,13 @@ import { getDBErrorMessage } from 'src/common/constants/error-codes.constant';
 import { CreateUserDto, LoginUserDto } from './dto';
 import { exclude } from 'src/common/helpers/exclude.helper';
 import * as bcrypt from 'bcryptjs';
-import { ApiResponse } from 'src/common/interfaces/api-response.interface';
+import { ApiResponseInterface } from 'src/common/interfaces/api-response.interface';
 import { UserEntity } from './entities/user.entity';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
 
 type UserWithoutPassword = Omit<UserEntity, 'password'>;
-export interface AuthResponse extends ApiResponse<UserWithoutPassword> {
+export interface AuthResponse extends ApiResponseInterface<UserWithoutPassword> {
   token: string;
 }
 
